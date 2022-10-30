@@ -1,0 +1,107 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SuppaZ80.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:SuppaZ80.Views"
+        xmlns:design="clr-namespace:SuppaZ80.ViewModels.Design"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="SuppaZ80.Views.MainWindow"
+        x:DataType="vm:IMainViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="SuppaZ80">
+
+    <Design.DataContext>
+        <design:MainViewModelDesign />
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="TextBlock.Error">
+            <Setter Property="Foreground" Value="Red" />
+        </Style>
+        <Style Selector="HeaderedContentControl">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <DockPanel>
+                            <ContentPresenter TextBlock.FontWeight="Bold" DockPanel.Dock="Top" Content="{TemplateBinding Header}" />
+                            <ContentPresenter Content="{TemplateBinding Content}" />
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+    </Window.Styles>
+
+    <DockPanel>
+        <TextBlock Classes="Error" Text="{Binding Errors^}" DockPanel.Dock="Bottom" />
+
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Open" Command="{Binding Open}" />
+            </MenuItem>
+        </Menu>
+
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+
+            <Panel Margin="20 0" DataContext="{Binding Processor}">
+                <Button IsVisible="{Binding !Run.IsExecuting^}" Command="{Binding Run}" HotKey="F5">Run</Button>
+                <Button IsVisible="{Binding Run.IsExecuting^}" Command="{Binding Stop}">Stop</Button>
+            </Panel>
+
+            <StackPanel Orientation="Horizontal" Margin="20 0" DataContext="{Binding StepProcessor}"
+                        DockPanel.Dock="Top">
+                <Button Command="{Binding Step}" HotKey="F5">Step</Button>
+                <Button IsVisible="{Binding Reset^}" Command="{Binding Reset}">Reset</Button>
+            </StackPanel>
+
+        </StackPanel>
+
+        <Grid ColumnDefinitions="* Auto Auto">
+            <HeaderedContentControl Grid.Column="0" BorderBrush="Black" BorderThickness="1">
+                <views:Editor Code="{Binding Source, Mode=TwoWay}" MinWidth="400" />
+            </HeaderedContentControl>
+            <GridSplitter Margin="3 0" Grid.Column="1"
+                          Background="{StaticResource SystemControlForegroundChromeMediumBrush}"
+                          VerticalAlignment="Stretch" Width="5" />
+            <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Right">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition MaxHeight="400" />
+                    </Grid.RowDefinitions>
+                    <HeaderedContentControl Header="CPU">
+                        <DataGrid Items="{Binding Registers^}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn CanUserSort="False" IsReadOnly="True" Binding="{Binding Name}"
+                                                    Header="Name" />
+                                <DataGridTextColumn CanUserSort="False"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding Value, StringFormat='{}{0:X4}'}"
+                                                    Header="Value" />
+                                <DataGridTextColumn CanUserSort="False" IsReadOnly="True"
+                                                    Binding="{Binding Hi, StringFormat='{}{0:X2}'}"
+                                                    Header="Hi" />
+                                <DataGridTextColumn CanUserSort="False" IsReadOnly="True"
+                                                    Binding="{Binding Lo, StringFormat='{}{0:X2}'}"
+                                                    Header="Lo" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </HeaderedContentControl>
+                    <HeaderedContentControl Grid.Row="1" Header="Memory" DockPanel.Dock="Bottom">
+                        <DataGrid Items="{Binding Memory^}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn x:DataType="vm:MemoryViewModel" CanUserSort="False"
+                                                    Header="Location" IsReadOnly="True" Binding="{Binding Location}" />
+                                <DataGridTextColumn x:DataType="vm:MemoryViewModel" CanUserSort="False" Header="Value"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding Value, StringFormat='{}{0:X4}'}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </HeaderedContentControl>
+                </Grid>
+            </Border>
+        </Grid>
+    </DockPanel>
+</Window>
