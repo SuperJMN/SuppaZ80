@@ -54,7 +54,7 @@
                         DockPanel.Dock="Top">
                 <Button Command="{Binding Step}" HotKey="F5">Step</Button>
                 <Button Command="{Binding Reset}">Reset</Button>
-                <TextBlock Text="{Binding CurrentLine^}" />
+                <TextBlock Margin="10 0" Text="{Binding CurrentLine^}" />
             </StackPanel>
 
         </StackPanel>

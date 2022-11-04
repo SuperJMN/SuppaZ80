@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using CSharpFunctionalExtensions;
@@ -29,8 +28,12 @@ public class Z80StepViewModel : ViewModelBase, IZ80StepViewModel
 
         CurrentLine = Reset.Merge(Step).WithLatestFrom(program, (status, data) =>
         {
-            var pc = status.Registers.OfType<Register>().First(x => x.Name == "PC").Value;
-            return Maybe<int?>.From(data.DebugInfo.FirstOrDefault(x => x.ProgramCounter == pc)?.Line);
+            var line = Maybe
+                .From(status.Registers["PC"])
+                .Bind(r => data.DebugInfo.TryFirst(x => x.ProgramCounter == r.Value))
+                .Select(x => x.Line);
+
+            return line;
         }).Select(x => x.Match(i => i.ToString(), () => ""));
     }
 
