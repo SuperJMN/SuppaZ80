@@ -8,20 +8,22 @@ public class ProcessorStatus
 {
     public ProcessorStatus(IEnumerable<byte> memory, IZ80Registers registers)
     {
-        Registers = new List<RegisterViewModel>
+        var regs = new[]
         {
-            new ShortRegisterViewModel("AF", registers.AF),
-            new ShortRegisterViewModel("BC", registers.BC),
-            new ShortRegisterViewModel("DE", registers.DE),
-            new ShortRegisterViewModel("HL", registers.HL),
-            new ShortRegisterViewModel("PC", (short) registers.PC),
-            new ShortRegisterViewModel("SP", registers.SP),
-            new ShortRegisterViewModel("I", registers.I)
+            new Register("AF", registers.AF),
+            new Register("BC", registers.BC),
+            new Register("DE", registers.DE),
+            new Register("HL", registers.HL),
+            new Register("PC", registers.PC),
+            new Register("SP", registers.SP),
+            new Register("I", registers.I)
         };
+
+        Registers = new Registers(regs);
 
         Memory = memory.Select((b, i) => new MemoryViewModel(b, i)).ToList();
     }
 
     public IEnumerable<MemoryViewModel> Memory { get; }
-    public List<RegisterViewModel> Registers { get; }
+    public Registers Registers { get; }
 }

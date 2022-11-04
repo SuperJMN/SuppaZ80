@@ -52,7 +52,7 @@ public class MainViewModel : ViewModelBase, IMainViewModel
 
     [Reactive] public string Source { get; set; } = "";
 
-    public IObservable<List<RegisterViewModel>> Registers { get; }
+    public IObservable<Registers> Registers { get; }
 
     public IObservable<IEnumerable<MemoryViewModel>> Memory { get; }
 

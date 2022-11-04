@@ -13,8 +13,8 @@ public class MainViewModelDesign : IMainViewModel
     public IZ80StepViewModel StepProcessor => new Z80StepViewModelDesign();
     public IZ80ViewModel Processor => new Z80ViewModelDesign();
 
-    public IObservable<List<RegisterViewModel>> Registers => Observable
-        .Return(new List<RegisterViewModel> { new ShortRegisterViewModel("Fake", 1) });
+    public IObservable<Registers> Registers => Observable
+        .Return(new Registers(new Register[] { new("Fake", 1) }));
 
     public IObservable<IEnumerable<MemoryViewModel>> Memory => Observable
         .Return(new List<MemoryViewModel> { new(123, 1) });

@@ -29,7 +29,7 @@ public class Z80StepViewModel : ViewModelBase, IZ80StepViewModel
 
         CurrentLine = Reset.Merge(Step).WithLatestFrom(program, (status, data) =>
         {
-            var pc = status.Registers.OfType<ShortRegisterViewModel>().First(x => x.Name == "PC").Value;
+            var pc = status.Registers.OfType<Register>().First(x => x.Name == "PC").Value;
             return Maybe<int?>.From(data.DebugInfo.FirstOrDefault(x => x.ProgramCounter == pc)?.Line);
         }).Select(x => x.Match(i => i.ToString(), () => ""));
     }
