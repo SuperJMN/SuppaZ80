@@ -18,7 +18,8 @@ public class Z80ViewModel : ViewModelBase, IZ80ViewModel
         var binaries = source
             .WhereNotEmpty()
             .Select(assembler.Assemble)
-            .WhereSuccess();
+            .WhereSuccess()
+            .Select(x => x.ProgramBinary);
 
         var canRun = source
             .WhereNotEmpty()
