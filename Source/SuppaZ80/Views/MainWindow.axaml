@@ -11,98 +11,123 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="SuppaZ80">
 
-    <Design.DataContext>
-        <design:MainViewModelDesign />
-    </Design.DataContext>
+	<Design.DataContext>
+		<design:MainViewModelDesign />
+	</Design.DataContext>
 
-    <Window.Styles>
-        <Style Selector="TextBlock.Error">
-            <Setter Property="Foreground" Value="Red" />
-        </Style>
-        <Style Selector="HeaderedContentControl">
-            <Setter Property="Template">
-                <ControlTemplate>
-                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+	<Window.Resources>
+        <StreamGeometry x:Key="Play">F1 M120,120z M0,0z M17.5,120L17.5,120 17.5,0 107.5,60z</StreamGeometry>
+		<StreamGeometry x:Key="Pause">M17.75,7 C19.5449254,7 21,8.45507456 21,10.25 L21,37.75 C21,39.5449254 19.5449254,41 17.75,41 L12.25,41 C10.4550746,41 9,39.5449254 9,37.75 L9,10.25 C9,8.45507456 10.4550746,7 12.25,7 L17.75,7 Z M35.75,7 C37.5449254,7 39,8.45507456 39,10.25 L39,37.75 C39,39.5449254 37.5449254,41 35.75,41 L30.25,41 C28.4550746,41 27,39.5449254 27,37.75 L27,10.25 C27,8.45507456 28.4550746,7 30.25,7 L35.75,7 Z M17.75,9.5 L12.25,9.5 C11.8357864,9.5 11.5,9.83578644 11.5,10.25 L11.5,37.75 C11.5,38.1642136 11.8357864,38.5 12.25,38.5 L17.75,38.5 C18.1642136,38.5 18.5,38.1642136 18.5,37.75 L18.5,10.25 C18.5,9.83578644 18.1642136,9.5 17.75,9.5 Z M35.75,9.5 L30.25,9.5 C29.8357864,9.5 29.5,9.83578644 29.5,10.25 L29.5,37.75 C29.5,38.1642136 29.8357864,38.5 30.25,38.5 L35.75,38.5 C36.1642136,38.5 36.5,38.1642136 36.5,37.75 L36.5,10.25 C36.5,9.83578644 36.1642136,9.5 35.75,9.5 Z</StreamGeometry>
+        <StreamGeometry x:Key="Stop">F1 M36,36z M0,0z M35,0L1,0C0.448,0,0,0.447,0,1L0,35C0,35.553,0.448,36,1,36L35,36C35.552,36,36,35.553,36,35L36,1C36,0.447,35.552,0,35,0z</StreamGeometry>
+		<StreamGeometry x:Key="ForwardStep">F1 M402.927,402.927z M0,0z M148.169,2.796C151.396,0.934 154.99,0 158.599,0 162.196,0 165.795,0.934 169.029,2.79L385.466,183.402C391.909,187.129 395.893,194.012 395.893,201.463 395.893,208.91 391.921,215.802 385.466,219.526L169.022,400.13C162.57,403.859 154.608,403.859 148.169,400.13 141.717,396.4 137.742,389.52 137.742,382.067L137.742,20.859C137.749,13.409,141.717,6.52,148.169,2.796z M7.035,8.553L7.035,394.36C7.035,398.964,10.771,402.706,15.369,402.7L84.182,402.7C88.792,402.7,92.528,398.965,92.528,394.36L92.528,8.559C92.528,3.948,88.792,0.212999999999999,84.182,0.218999999999999L15.369,0.218999999999999C10.771,0.213,7.035,3.948,7.035,8.553z</StreamGeometry>
+	</Window.Resources>
+
+	<Window.Styles>
+		<Style Selector="TextBlock.Error">
+			<Setter Property="Foreground" Value="Red" />
+		</Style>
+		<Style Selector="HeaderedContentControl">
+			<Setter Property="Template">
+				<ControlTemplate>
+					<Border BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <DockPanel>
-                            <ContentPresenter TextBlock.FontWeight="Bold" DockPanel.Dock="Top" Content="{TemplateBinding Header}" />
-                            <ContentPresenter Content="{TemplateBinding Content}" />
-                        </DockPanel>
-                    </Border>
-                </ControlTemplate>
-            </Setter>
+						<DockPanel>
+							<ContentPresenter TextBlock.FontWeight="Bold" DockPanel.Dock="Top" Content="{TemplateBinding Header}" />
+							<ContentPresenter Content="{TemplateBinding Content}" />
+						</DockPanel>
+					</Border>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+		<Style Selector="Viewbox:disabled">
+			<Setter Property="Opacity" Value="0.5"></Setter>
         </Style>
-    </Window.Styles>
+	</Window.Styles>
 
-    <DockPanel>
-        <TextBlock Classes="Error" Text="{Binding Errors^}" DockPanel.Dock="Bottom" />
+	<DockPanel>
+		<TextBlock Classes="Error" Text="{Binding Errors^}" DockPanel.Dock="Bottom" />
 
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="File">
-                <MenuItem Header="Open" Command="{Binding Open}" />
-            </MenuItem>
-        </Menu>
+		<Menu DockPanel.Dock="Top">
+			<MenuItem Header="File">
+				<MenuItem Header="Open" Command="{Binding Open}" />
+			</MenuItem>
+		</Menu>
 
-        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+		<StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
 
-            <Panel Margin="20 0" DataContext="{Binding Processor}">
-                <Button IsVisible="{Binding !Run.IsExecuting^}" Command="{Binding Run}" HotKey="F5">Run</Button>
-                <Button IsVisible="{Binding Run.IsExecuting^}" Command="{Binding Stop}">Stop</Button>
-            </Panel>
+            <StackPanel Orientation="Horizontal" Margin="20 0" DataContext="{Binding Debugger}" DockPanel.Dock="Top">
+				<Button Command="{Binding Play}" IsVisible="{Binding Play.CanExecute^}" HotKey="F5">
+					<Viewbox Width="15" Height="15">
+						<Path Fill="Black" Data="{StaticResource Play}" />
+					</Viewbox>
+				</Button>
+				<Button Command="{Binding Step}" HotKey="F10" IsVisible="{Binding !Play.CanExecute^}" >
+                    <Viewbox Width="15" Height="15">
+                        <Path Fill="Black" Data="{StaticResource ForwardStep}" />
+                    </Viewbox>
+                </Button>
+				<Button Command="{Binding Stop}" IsVisible="{Binding !Play.CanExecute^}">
+                    <Viewbox Width="15" Height="15">
+                        <Path Fill="Black" Data="{StaticResource Stop}"  />
+                    </Viewbox>
+                </Button>
+			</StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="20 0" DataContext="{Binding StepProcessor}"
-                        DockPanel.Dock="Top">
-                <Button Command="{Binding Step}" HotKey="F5">Step</Button>
-                <Button Command="{Binding Reset}">Reset</Button>
-                <TextBlock Margin="10 0" Text="{Binding CurrentLine^}" />
-            </StackPanel>
+            <!--<Panel Margin="20 0" IsVisible="{Binding !Debugger.IsDebugging^}" >
+                <Button IsVisible="{Binding !Processor.Run.IsExecuting^}" Command="{Binding Processor.Run}" HotKey="F5">Run without debug</Button>
+                <Button IsVisible="{Binding Processor.Run.IsExecuting^}" Command="{Binding Processor.Stop}">
+                    <Viewbox Width="15" Height="15">
+                        <Path Fill="Black" Data="{StaticResource Stop}"  />
+                    </Viewbox>
+                </Button>
+            </Panel>-->
 
         </StackPanel>
 
-        <Grid ColumnDefinitions="* Auto Auto">
-            <HeaderedContentControl Grid.Column="0" BorderBrush="Black" BorderThickness="1">
-                <views:Editor Code="{Binding Source, Mode=TwoWay}" MinWidth="400" />
-            </HeaderedContentControl>
-            <GridSplitter Margin="3 0" Grid.Column="1"
+		<Grid ColumnDefinitions="* Auto Auto">
+			<HeaderedContentControl Grid.Column="0" BorderBrush="Black" BorderThickness="1">
+				<views:Editor IsReadOnly="{Binding Debugger.IsDebugging^}" CurrentLine="{Binding Debugger.CurrentLine^}" Code="{Binding Source, Mode=TwoWay}" MinWidth="400" />
+			</HeaderedContentControl>
+			<GridSplitter Margin="3 0" Grid.Column="1"
                           Background="{StaticResource SystemControlForegroundChromeMediumBrush}"
                           VerticalAlignment="Stretch" Width="5" />
-            <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Right">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition MaxHeight="400" />
-                    </Grid.RowDefinitions>
-                    <HeaderedContentControl Header="CPU">
-                        <DataGrid Items="{Binding Registers^.Values}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn CanUserSort="False" IsReadOnly="True" Binding="{Binding Name}"
+			<Border Grid.Column="2" BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Right">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition MaxHeight="400" />
+					</Grid.RowDefinitions>
+					<HeaderedContentControl Header="CPU">
+						<DataGrid Items="{Binding Registers^.Values}">
+							<DataGrid.Columns>
+								<DataGridTextColumn CanUserSort="False" IsReadOnly="True" Binding="{Binding Name}"
                                                     Header="Name" />
-                                <DataGridTextColumn CanUserSort="False"
+								<DataGridTextColumn CanUserSort="False"
                                                     IsReadOnly="True"
                                                     Binding="{Binding Value, StringFormat='{}{0:X4}'}"
                                                     Header="Value" />
-                                <DataGridTextColumn CanUserSort="False" IsReadOnly="True"
+								<DataGridTextColumn CanUserSort="False" IsReadOnly="True"
                                                     Binding="{Binding Hi, StringFormat='{}{0:X2}'}"
                                                     Header="Hi" />
-                                <DataGridTextColumn CanUserSort="False" IsReadOnly="True"
+								<DataGridTextColumn CanUserSort="False" IsReadOnly="True"
                                                     Binding="{Binding Lo, StringFormat='{}{0:X2}'}"
                                                     Header="Lo" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </HeaderedContentControl>
-                    <HeaderedContentControl Grid.Row="1" Header="Memory" DockPanel.Dock="Bottom">
-                        <DataGrid Items="{Binding Memory^}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn x:DataType="vm:MemoryViewModel" CanUserSort="False"
+							</DataGrid.Columns>
+						</DataGrid>
+					</HeaderedContentControl>
+					<HeaderedContentControl Grid.Row="1" Header="Memory" DockPanel.Dock="Bottom">
+						<DataGrid Items="{Binding Memory^}">
+							<DataGrid.Columns>
+								<DataGridTextColumn x:DataType="vm:MemoryViewModel" CanUserSort="False"
                                                     Header="Location" IsReadOnly="True" Binding="{Binding Location}" />
-                                <DataGridTextColumn x:DataType="vm:MemoryViewModel" CanUserSort="False" Header="Value"
+								<DataGridTextColumn x:DataType="vm:MemoryViewModel" CanUserSort="False" Header="Value"
                                                     IsReadOnly="True"
                                                     Binding="{Binding Value, StringFormat='{}{0:X4}'}" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </HeaderedContentControl>
-                </Grid>
-            </Border>
-        </Grid>
-    </DockPanel>
+							</DataGrid.Columns>
+						</DataGrid>
+					</HeaderedContentControl>
+				</Grid>
+			</Border>
+		</Grid>
+	</DockPanel>
 </Window>

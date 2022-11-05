@@ -10,7 +10,7 @@ namespace SuppaZ80.ViewModels.Design;
 
 public class MainViewModelDesign : IMainViewModel
 {
-    public IZ80StepViewModel StepProcessor => new Z80StepViewModelDesign();
+    public IDebugger Debugger => new DebuggerDesign();
     public IZ80ViewModel Processor => new Z80ViewModelDesign();
 
     public IObservable<Registers> Registers => Observable
