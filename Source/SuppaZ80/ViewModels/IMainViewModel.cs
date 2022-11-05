@@ -9,9 +9,9 @@ namespace SuppaZ80.ViewModels;
 
 public interface IMainViewModel
 {
-    IZ80StepViewModel StepProcessor { get; }
+    IDebugger Debugger { get; }
     IZ80ViewModel Processor { get; }
-    IObservable<List<RegisterViewModel>> Registers { get; }
+    IObservable<Registers> Registers { get; }
     IObservable<IEnumerable<MemoryViewModel>> Memory { get; }
     IObservable<string> Errors { get; }
     string Source { get; set; }

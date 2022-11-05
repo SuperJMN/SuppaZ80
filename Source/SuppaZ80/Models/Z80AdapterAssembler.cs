@@ -5,7 +5,7 @@ namespace SuppaZ80.Models;
 
 public class Z80AdapterAssembler : IAssembler
 {
-    public Result<byte[]> Assemble(string code)
+    public Result<AssemblyData> Assemble(string code)
     {
         var assembler = new Z80Assembler();
         return assembler.Assemble(code);

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Sixty502DotNet;
 using SuppaZ80.Models;
 using Zafiro.Core.Mixins;
 using Zafiro.FileSystem;
@@ -39,10 +40,10 @@ public class MainViewModel : ViewModelBase, IMainViewModel
 
         var program = assembledResult.Where(x => x.IsSuccess).Select(x => x.Value);
         Processor = new Z80ViewModel(assembler, this.WhenAnyValue(x => x.Source));
-        StepProcessor = new Z80StepViewModel(program);
+        Debugger = new Debugger(program);
 
-        Memory = Processor.Run.Merge(StepProcessor.Step).Select(x => x.Memory.Take(128));
-        Registers = Processor.Run.Merge(StepProcessor.Step).Select(x => x.Registers);
+        Memory = Processor.Run.Merge(Debugger.Status).Select(x => x.Memory.Take(128));
+        Registers = Processor.Run.Merge(Debugger.Status).Select(x => x.Registers);
 
         Source = "; This sample adds 2 numbers\r\n\r\n\tCALL MAIN\r\n\tHALT\r\nMAIN:\r\n\tLD a, 1\r\n\tLD b, 2\r\n\tADD a, b\r\n\tRET";
     }
@@ -51,11 +52,11 @@ public class MainViewModel : ViewModelBase, IMainViewModel
 
     [Reactive] public string Source { get; set; } = "";
 
-    public IObservable<List<RegisterViewModel>> Registers { get; }
+    public IObservable<Registers> Registers { get; }
 
     public IObservable<IEnumerable<MemoryViewModel>> Memory { get; }
 
-    public IZ80StepViewModel StepProcessor { get; }
+    public IDebugger Debugger { get; }
 
     public IZ80ViewModel Processor { get; }
 
@@ -67,7 +68,7 @@ public class MainViewModel : ViewModelBase, IMainViewModel
         return await s.ReadToEnd();
     }
 
-    private Result<byte[]> Assemble(string code)
+    private Result<AssemblyData> Assemble(string code)
     {
         return assembler.Assemble(code);
     }

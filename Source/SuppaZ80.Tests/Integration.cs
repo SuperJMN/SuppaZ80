@@ -11,13 +11,13 @@ public class Integration
     public async Task Run_until_halted()
     {
         var assembler = new Z80Assembler();
-        await Z80.RunUntilHalted(assembler.Assemble("HALT").Value, new NewThreadScheduler());
+        await Z80.RunUntilHalted(assembler.Assemble("HALT").Value.ProgramBinary, new NewThreadScheduler());
     }
 
     [Fact]
     public async Task Run_until_halted_should_stop()
     {
         var assembler = new Z80Assembler();
-        await Z80.RunUntilHalted(assembler.Assemble("\tLD hl,0").Value, new NewThreadScheduler(), Observable.Timer(TimeSpan.FromSeconds(5)));
+        await Z80.RunUntilHalted(assembler.Assemble("\tLD hl,0").Value.ProgramBinary, new NewThreadScheduler(), Observable.Timer(TimeSpan.FromSeconds(5)));
     }
 }

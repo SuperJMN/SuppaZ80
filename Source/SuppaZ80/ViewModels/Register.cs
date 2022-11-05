@@ -2,9 +2,9 @@ using System;
 
 namespace SuppaZ80.ViewModels;
 
-public class ShortRegisterViewModel : RegisterViewModel
+public class Register : RegisterViewModel
 {
-    public ShortRegisterViewModel(string name, short value)
+    public Register(string name, int value)
     {
         Name = name;
         Value = value;
