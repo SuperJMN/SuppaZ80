@@ -2,7 +2,7 @@
 
 This is the smallest IDE you'll find for the Zilog Z80 CPU.
 
-![image](https://user-images.githubusercontent.com/3109851/199703449-56fa9db9-1b53-4663-bdf5-5336fe6d88db.png)
+![image](https://user-images.githubusercontent.com/3109851/200137211-5c48a8e8-9078-43c4-baf0-3e8223b5c2cb.png)
 
 ## Instructions
 
@@ -19,7 +19,6 @@ This is the smallest IDE you'll find for the Zilog Z80 CPU.
 
 ## Pending work
 
-- Highligh the current line when stepping through.
 - Edit registers and memory.
 - Save file.
 - Syntax highlighting.
