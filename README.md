@@ -2,7 +2,8 @@
 
 This is the smallest IDE you'll find for the Zilog Z80 CPU.
 
-![image](https://user-images.githubusercontent.com/3109851/200137211-5c48a8e8-9078-43c4-baf0-3e8223b5c2cb.png)
+https://user-images.githubusercontent.com/3109851/200137474-92177ce4-3aa0-4b96-80f1-aa3b4252cfb5.mp4
+
 
 ## Instructions
 
@@ -10,6 +11,7 @@ This is the smallest IDE you'll find for the Zilog Z80 CPU.
 2. A window will load with some sample code.
 3. Click **[Run]**.
 4. ¡Listo!
+![SuppaZ80_hL3kjA56wg](https://user-images.githubusercontent.com/3109851/200137447-aa9bc604-facf-4bf8-87f4-fa993a228ae6.png)
 
 **Run:** will run the program until the CPU is halted. You can force it to stop by clicking "Stop" (button only available when running!)
 
