@@ -4,8 +4,13 @@ using CSharpFunctionalExtensions;
 
 namespace SuppaZ80.ViewModels;
 
-public static class Mixin
+public static class ObservableMixin
 {
+    public static IObservable<bool> Not(this IObservable<bool> self)
+    {
+        return self.Select(b => !b);
+    }
+
     public static IObservable<T> WhereSuccess<T>(this IObservable<Result<T>> self)
     {
         return self.Where(a => a.IsSuccess)

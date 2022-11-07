@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:SuppaZ80.ViewModels"
+             xmlns:design="clr-namespace:SuppaZ80.ViewModels.Design"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="viewModels:IMainViewModel"
+             x:Class="SuppaZ80.Views.RegistersView">
+
+    <Design.DataContext>
+        <design:MainViewModelDesign />
+    </Design.DataContext>
+
+    <HeaderedContentControl Header="CPU">
+        <DataGrid Items="{Binding Registers^.Values}">
+            <DataGrid.Columns>
+                <DataGridTextColumn CanUserSort="False" IsReadOnly="True" Binding="{Binding Name}"
+                                    Header="Name" />
+                <DataGridTextColumn CanUserSort="False"
+                                    IsReadOnly="True"
+                                    Binding="{Binding Value, StringFormat='{}{0:X4}'}"
+                                    Header="Value" />
+                <DataGridTextColumn CanUserSort="False" IsReadOnly="True"
+                                    Binding="{Binding Hi, StringFormat='{}{0:X2}'}"
+                                    Header="Hi" />
+                <DataGridTextColumn CanUserSort="False" IsReadOnly="True"
+                                    Binding="{Binding Lo, StringFormat='{}{0:X2}'}"
+                                    Header="Lo" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </HeaderedContentControl>
+</UserControl>

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Konamiman.Z80dotNet;
+using SuppaZ80.Models;
 
 namespace SuppaZ80.ViewModels;
 
@@ -21,9 +22,9 @@ public class ProcessorStatus
 
         Registers = new Registers(regs);
 
-        Memory = memory.Select((b, i) => new MemoryViewModel(b, i)).ToList();
+        Memory = memory.Select((b, i) => new MemoryCell(b, i));
     }
 
-    public IEnumerable<MemoryViewModel> Memory { get; }
+    public IEnumerable<MemoryCell> Memory { get; }
     public Registers Registers { get; }
 }

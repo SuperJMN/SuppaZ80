@@ -22,12 +22,6 @@ public class MainViewModel : ViewModelBase, IMainViewModel
     {
         this.assembler = assembler;
         var helper = new ZafiroHelpers();
-        Open = helper.Open;
-
-        Open.SelectMany(r => r.Match(LoadFile, _ => Task.FromResult("")))
-            .ObserveOn(RxApp.MainThreadScheduler)
-            .Do(s => Source = s)
-            .Subscribe();
 
         var assembledResult = this.WhenAnyValue(x => x.Source)
             .Throttle(TimeSpan.FromSeconds(1), RxApp.MainThreadScheduler)
@@ -38,23 +32,40 @@ public class MainViewModel : ViewModelBase, IMainViewModel
 
         Errors = assembledResult.Select(x => x.Match(_ => "", s => s));
 
-        var program = assembledResult.Where(x => x.IsSuccess).Select(x => x.Value);
         Processor = new Z80ViewModel(assembler, this.WhenAnyValue(x => x.Source));
-        Debugger = new Debugger(program);
+        Debugger = new Debugger(assembledResult);
 
-        Memory = Processor.Run.Merge(Debugger.Status).Select(x => x.Memory.Take(128));
+        Open = ReactiveCommand.CreateFromObservable(() => helper.Files, Debugger.IsDebugging.Not());
+        Open.SelectMany(r => r.Match(LoadFile, _ => Task.FromResult("")))
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Do(s => Source = s)
+            .Subscribe();
+
+        MemoryBlocks = GroupMemoryBlocks(GetMemory(Debugger.Status));
         Registers = Processor.Run.Merge(Debugger.Status).Select(x => x.Registers);
 
         Source = "; This sample adds 2 numbers\r\n\r\n\tCALL MAIN\r\n\tHALT\r\nMAIN:\r\n\tLD a, 1\r\n\tLD b, 2\r\n\tADD a, b\r\n\tRET";
     }
+
+    private static IObservable<IEnumerable<MemoryBlockViewModel>> GroupMemoryBlocks(IObservable<IEnumerable<MemoryViewModel>> memoryVms)
+    {
+        return memoryVms.Select(a => a.Chunk(4)).Select(b => b.Select((m, i) => new MemoryBlockViewModel(m, i * 4)));
+    }
+
+    private IObservable<IEnumerable<MemoryViewModel>> GetMemory(IObservable<ProcessorStatus> processorStatus)
+    {
+        return processorStatus
+            .Select(status => status.Memory.Take(32))
+            .Select(x => x.Select(cell => new MemoryViewModel(cell, v => Debugger.SetMemory(cell.Location, v))));
+    }
+
+    public IObservable<IEnumerable<MemoryBlockViewModel>> MemoryBlocks { get; }
 
     public IObservable<string> Errors { get; }
 
     [Reactive] public string Source { get; set; } = "";
 
     public IObservable<Registers> Registers { get; }
-
-    public IObservable<IEnumerable<MemoryViewModel>> Memory { get; }
 
     public IDebugger Debugger { get; }
 

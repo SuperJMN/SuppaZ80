@@ -13,4 +13,5 @@ public interface IDebugger
     ReactiveCommand<Unit, ProcessorStatus> Play { get; }
     IObservable<ProcessorStatus> Status { get; }
     IObservable<bool> IsDebugging { get; }
+    void SetMemory(int location, byte value);
 }
