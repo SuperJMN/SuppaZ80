@@ -13,9 +13,10 @@ public class Debugger : ViewModelBase, IDebugger
 {
     private readonly Z80Processor z80 = new();
 
-    public Debugger(IObservable<AssemblyData> program)
+    public Debugger(IObservable<Result<AssemblyData>> assembleResultChanged)
     {
-        program
+        assembleResultChanged
+            .WhereSuccess()
             .Do(assemblyData =>
             {
                 z80.Reset();
@@ -30,7 +31,6 @@ public class Debugger : ViewModelBase, IDebugger
 
         Step = ReactiveCommand.CreateFromObservable(() => Observable.Return(z80.ExecuteNextInstruction()).Select(_ => z80.GetStatus()), isHaltedSubject.Select(x => !x));
 
-
         Stop = ReactiveCommand.Create(() => { }, canStartDebuggingSession.Select(b => !b));
         Play = ReactiveCommand.CreateFromObservable(() => Observable.Start(() => z80.Reset()).Select(_ => z80.GetStatus()), canStartDebuggingSession);
         Status = Step.Merge(Play);
@@ -39,7 +39,7 @@ public class Debugger : ViewModelBase, IDebugger
 
         Step.Select(_ => z80.IsHalted).Merge(Stop.Select(_ => false)).Subscribe(isHaltedSubject);
 
-        var currentLine = Play.Merge(Step).WithLatestFrom(program, (status, data) =>
+        var currentLine = Play.Merge(Step).WithLatestFrom(assembleResultChanged.WhereSuccess(), (status, data) =>
         {
             if (z80.IsHalted)
             {
@@ -60,6 +60,11 @@ public class Debugger : ViewModelBase, IDebugger
     }
 
     public IObservable<bool> IsDebugging { get; }
+
+    public void SetMemory(int location, byte value)
+    {
+        z80.Memory[location] = value;
+    }
 
     public IObservable<ProcessorStatus> Status { get; }
 

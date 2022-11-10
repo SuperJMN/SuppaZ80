@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
@@ -27,7 +28,10 @@ public class ZafiroHelpers
             .Select(x => x.Value);
 
         Open = ReactiveCommand.CreateFromObservable(() => files);
+        Files = files;
     }
+
+    public IObservable<Result<IZafiroFile>> Files { get; }
 
     public ReactiveCommand<Unit, Result<IZafiroFile>> Open { get; }
 

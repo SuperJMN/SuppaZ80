@@ -1,0 +1,132 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:SuppaZ80.ViewModels"
+             xmlns:design="clr-namespace:SuppaZ80.ViewModels.Design"
+             xmlns:models="clr-namespace:SuppaZ80.Models"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="viewModels1:IMainViewModel"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+             xmlns:behaviors="clr-namespace:SuppaZ80.Behaviors"
+             xmlns:viewModels1="clr-namespace:SuppaZ80.ViewModels"
+             x:Class="SuppaZ80.Views.MemoryView" x:CompileBindings="True">
+
+	<Design.DataContext>
+		<design:MainViewModelDesign />
+	</Design.DataContext>
+
+	<UserControl.Styles>
+
+		<Style Selector="DataValidationErrors">
+			<Style.Resources>
+				<DataTemplate x:Key="InlineDataValidationErrorTemplate">
+					<ItemsControl Items="{Binding}" x:DataType="DataValidationErrors" Foreground="{DynamicResource SystemControlErrorTextForegroundBrush}">
+						<ItemsControl.Styles>
+							<Style Selector="TextBlock">
+								<Setter Property="TextWrapping" Value="Wrap" />
+							</Style>
+						</ItemsControl.Styles>
+					</ItemsControl>
+				</DataTemplate>
+				<ControlTemplate x:Key="InlineDataValidationContentTemplate" TargetType="DataValidationErrors">
+					<Panel>
+						<Popup DataContext="{TemplateBinding Owner}" IsOpen="{Binding (DataValidationErrors.HasErrors)}">
+                            <Border Background="White" Padding="4" BorderThickness="1" BorderBrush="{DynamicResource SystemControlErrorTextForegroundBrush}" >
+                                <ContentControl x:Name="InlineDataValidationContentControl"
+                                                Content="{Binding (DataValidationErrors.Errors)}"
+                                                ContentTemplate="{TemplateBinding ErrorTemplate}" /></Border>
+						</Popup>
+						<ContentPresenter Name="PART_ContentPresenter"
+										  Padding="{TemplateBinding Padding}"
+										  Background="{TemplateBinding Background}"
+										  BorderThickness="{TemplateBinding BorderThickness}"
+										  CornerRadius="{TemplateBinding CornerRadius}"
+										  Content="{TemplateBinding Content}"
+										  ContentTemplate="{TemplateBinding ContentTemplate}" />
+					</Panel>
+				</ControlTemplate>
+
+				<DataTemplate x:DataType="DataValidationErrors" x:Key="TooltipDataValidationErrorTemplate">
+					<Panel Name="PART_InlineErrorTemplatePanel" Background="Transparent">
+						<Panel.Styles>
+							<Style Selector="Panel#PART_InlineErrorTemplatePanel">
+								<Setter Property="Margin" Value="8,0" />
+							</Style>
+							<Style Selector="Panel#PART_InlineErrorTemplatePanel ToolTip">
+								<Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
+							</Style>
+							<Style Selector="Panel#PART_InlineErrorTemplatePanel ToolTip TextBlock">
+								<Setter Property="TextWrapping" Value="Wrap" />
+							</Style>
+						</Panel.Styles>
+						<ToolTip.Tip>
+							<ItemsControl Items="{Binding}" />
+						</ToolTip.Tip>
+						<Path Width="14"
+							  Height="14"
+							  Data="M14,7 A7,7 0 0,0 0,7 M0,7 A7,7 0 1,0 14,7 M7,3l0,5 M7,9l0,2"
+							  Stroke="{DynamicResource SystemControlErrorTextForegroundBrush}"
+							  StrokeThickness="2" />
+					</Panel>
+				</DataTemplate>
+				<ControlTemplate x:Key="TooltipDataValidationContentTemplate" TargetType="DataValidationErrors">
+					<DockPanel LastChildFill="True">
+						<ContentControl Content="{Binding (DataValidationErrors.Errors)}"
+										ContentTemplate="{TemplateBinding ErrorTemplate}"
+										DataContext="{TemplateBinding Owner}"
+										DockPanel.Dock="Right"
+										IsVisible="{Binding (DataValidationErrors.HasErrors)}" />
+						<ContentPresenter Name="PART_ContentPresenter"
+										  Padding="{TemplateBinding Padding}"
+										  Background="{TemplateBinding Background}"
+										  BorderBrush="{TemplateBinding BorderBrush}"
+										  BorderThickness="{TemplateBinding BorderThickness}"
+										  CornerRadius="{TemplateBinding CornerRadius}"
+										  Content="{TemplateBinding Content}"
+										  ContentTemplate="{TemplateBinding ContentTemplate}" />
+					</DockPanel>
+				</ControlTemplate>
+			</Style.Resources>
+
+			<Setter Property="Template" Value="{StaticResource InlineDataValidationContentTemplate}" />
+			<Setter Property="ErrorTemplate" Value="{StaticResource InlineDataValidationErrorTemplate}" />
+		</Style>
+
+	</UserControl.Styles>
+
+	<HeaderedContentControl Header="Memory">
+            <DataGrid Items="{Binding MemoryBlocks^}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:DataType="models:MemoryBlockViewModel" Binding="{Binding BaseAddress}" />
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate x:DataType="models:MemoryBlockViewModel">
+                                <ItemsControl Items="{Binding Memory}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <UniformGrid Rows="1" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <TextBox TextAlignment="Center" Text="{Binding Text, Mode=TwoWay}">
+													<i:Interaction.Behaviors>
+														<ia:EventTriggerBehavior EventName="LostFocus">
+															<ia:InvokeCommandAction Command="{Binding Update}" />
+                                                        </ia:EventTriggerBehavior>
+                                                    </i:Interaction.Behaviors>
+                                                </TextBox>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </HeaderedContentControl>
+</UserControl>

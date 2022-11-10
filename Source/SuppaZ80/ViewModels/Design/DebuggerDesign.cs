@@ -16,4 +16,8 @@ internal class DebuggerDesign : IDebugger
     public ReactiveCommand<Unit, ProcessorStatus> Play { get; }
     public IObservable<ProcessorStatus> Status { get; }
     public IObservable<bool> IsDebugging => Observable.Return(false);
+
+    public void SetMemory(int location, byte value)
+    {
+    }
 }
