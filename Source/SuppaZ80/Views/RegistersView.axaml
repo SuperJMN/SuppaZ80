@@ -8,26 +8,25 @@
              x:DataType="viewModels:IMainViewModel"
              x:Class="SuppaZ80.Views.RegistersView">
 
-    <Design.DataContext>
-        <design:MainViewModelDesign />
-    </Design.DataContext>
+	<Design.DataContext>
+		<design:MainViewModelDesign />
+	</Design.DataContext>
 
-    <HeaderedContentControl Header="CPU">
-        <DataGrid Items="{Binding Registers^.Values}">
-            <DataGrid.Columns>
-                <DataGridTextColumn CanUserSort="False" IsReadOnly="True" Binding="{Binding Name}"
-                                    Header="Name" />
-                <DataGridTextColumn CanUserSort="False"
-                                    IsReadOnly="True"
-                                    Binding="{Binding Value, StringFormat='{}{0:X4}'}"
-                                    Header="Value" />
-                <DataGridTextColumn CanUserSort="False" IsReadOnly="True"
-                                    Binding="{Binding Hi, StringFormat='{}{0:X2}'}"
-                                    Header="Hi" />
-                <DataGridTextColumn CanUserSort="False" IsReadOnly="True"
-                                    Binding="{Binding Lo, StringFormat='{}{0:X2}'}"
-                                    Header="Lo" />
-            </DataGrid.Columns>
-        </DataGrid>
-    </HeaderedContentControl>
+	<HeaderedContentControl Header="CPU">
+		<ItemsRepeater Items="{Binding RegisterLists^}">
+			
+            <ItemsRepeater.Layout>
+                <UniformGridLayout MaximumRowsOrColumns="2" MinColumnSpacing="10" />
+            </ItemsRepeater.Layout>
+
+			<ItemsRepeater.ItemTemplate>
+				<DataTemplate>
+					<DockPanel>
+						<TextBlock Text="{Binding Name}" Width="30" Margin="10 0" DockPanel.Dock="Left" VerticalAlignment="Center" />
+						<ContentControl Content="{Binding Value}" />
+                    </DockPanel>
+				</DataTemplate>
+			</ItemsRepeater.ItemTemplate>
+		</ItemsRepeater>
+	</HeaderedContentControl>
 </UserControl>

@@ -33,7 +33,7 @@ public class Debugger : ViewModelBase, IDebugger
 
         Stop = ReactiveCommand.Create(() => { }, canStartDebuggingSession.Select(b => !b));
         Play = ReactiveCommand.CreateFromObservable(() => Observable.Start(() => z80.Reset()).Select(_ => z80.GetStatus()), canStartDebuggingSession);
-        Status = Step.Merge(Play);
+        StatusChanged = Step.Merge(Play);
         Play.Select(_ => false).Subscribe(canStartDebuggingSession);
         Stop.Select(_ => true).Subscribe(canStartDebuggingSession);
 
@@ -47,8 +47,8 @@ public class Debugger : ViewModelBase, IDebugger
             }
 
             var line = Maybe
-                .From(status.Registers["PC"])
-                .Bind(r => data.DebugInfo.TryFirst(x => x.ProgramCounter == r.Value))
+                .From(status.RawRegisters.PC)
+                .Bind(pc => data.DebugInfo.TryFirst(x => x.ProgramCounter == pc))
                 .Select(x => x.Line);
 
             return line;
@@ -66,13 +66,42 @@ public class Debugger : ViewModelBase, IDebugger
         z80.Memory[location] = value;
     }
 
-    public IObservable<ProcessorStatus> Status { get; }
+    public void SetRegister(string name, short value)
+    {
+        switch (name)
+        {
+            case "AF":
+                z80.Registers.AF = value;
+                break;
+            case "BC":
+                z80.Registers.BC = value;
+                break;
+            case "DE":
+                z80.Registers.DE = value;
+                break;
+            case "HL":
+                z80.Registers.HL = value;
+                break;
+        }
+    }
 
-    public ReactiveCommand<Unit, ProcessorStatus> Play { get; }
+    public void SetRegister(string name, ushort value)
+    {
+        switch (name)
+        {
+            case "PC":
+                z80.Registers.PC = value;
+                break;
+        }
+    }
+
+    public IObservable<Status> StatusChanged { get; }
+
+    public ReactiveCommand<Unit, Status> Play { get; }
 
     public ReactiveCommand<Unit, Unit> Stop { get; }
 
     public IObservable<Maybe<int>> CurrentLine { get; }
 
-    public ReactiveCommand<Unit, ProcessorStatus> Step { get; }
+    public ReactiveCommand<Unit, Status> Step { get; }
 }

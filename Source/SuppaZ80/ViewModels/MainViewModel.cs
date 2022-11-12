@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -41,25 +42,52 @@ public class MainViewModel : ViewModelBase, IMainViewModel
             .Do(s => Source = s)
             .Subscribe();
 
-        MemoryBlocks = GroupMemoryBlocks(GetMemory(Debugger.Status));
-        Registers = Processor.Run.Merge(Debugger.Status).Select(x => x.Registers);
+        MemoryBlockLists = GroupMemoryBlocks(GetMemory(Debugger.StatusChanged));
+        RegisterLists = GetRegisters(Debugger.StatusChanged);
 
         Source = "; This sample adds 2 numbers\r\n\r\n\tCALL MAIN\r\n\tHALT\r\nMAIN:\r\n\tLD a, 1\r\n\tLD b, 2\r\n\tADD a, b\r\n\tRET";
     }
 
-    private static IObservable<IEnumerable<MemoryBlockViewModel>> GroupMemoryBlocks(IObservable<IEnumerable<MemoryViewModel>> memoryVms)
+    public IObservable<List<NamedMemory>> RegisterLists { get; }
+
+    private IObservable<List<NamedMemory>> GetRegisters(IObservable<Status> debuggerStatusChanged)
+    {
+        return debuggerStatusChanged.Select(x => x.RawRegisters).Select(x =>
+        {
+            return new[]
+            {
+                NamedMemory(x.AF, nameof(x.AF)),
+                NamedMemory(x.BC, nameof(x.BC)),
+                NamedMemory(x.DE, nameof(x.DE)),
+                NamedMemory(x.HL, nameof(x.HL)),
+                NamedMemory(x.PC, nameof(x.PC))
+            }.ToList();
+        });
+    }
+
+    private NamedMemory NamedMemory(short value, string name)
+    {
+        return new NamedMemory(name, new ModifiableValue<short>(value, text => short.Parse(text, NumberStyles.HexNumber), x => $"{x:X4}", x => Debugger.SetRegister(name, x)));
+    }
+
+    private NamedMemory NamedMemory(ushort value, string name)
+    {
+        return new NamedMemory(name, new ModifiableValue<ushort>(value, text => ushort.Parse(text, NumberStyles.HexNumber), x => $"{x:X4}", x => Debugger.SetRegister(name, x)));
+    }
+
+    private static IObservable<IEnumerable<MemoryBlockViewModel>> GroupMemoryBlocks(IObservable<IEnumerable<IndexedMemory>> memoryVms)
     {
         return memoryVms.Select(a => a.Chunk(4)).Select(b => b.Select((m, i) => new MemoryBlockViewModel(m, i * 4)));
     }
 
-    private IObservable<IEnumerable<MemoryViewModel>> GetMemory(IObservable<ProcessorStatus> processorStatus)
+    private IObservable<IEnumerable<IndexedMemory>> GetMemory(IObservable<Status> processorStatus)
     {
         return processorStatus
-            .Select(status => status.Memory.Take(32))
-            .Select(x => x.Select(cell => new MemoryViewModel(cell, v => Debugger.SetMemory(cell.Location, v))));
+            .Select(status => status.RawMemory.Take(32))
+            .Select(bytes => bytes.Select((b, i) => new IndexedMemory(i, new ModifiableValue<byte>(b, s => byte.Parse(s, NumberStyles.HexNumber), x => $"{x:X2}", x => Debugger.SetMemory(i, x)))));
     }
 
-    public IObservable<IEnumerable<MemoryBlockViewModel>> MemoryBlocks { get; }
+    public IObservable<IEnumerable<MemoryBlockViewModel>> MemoryBlockLists { get; }
 
     public IObservable<string> Errors { get; }
 

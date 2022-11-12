@@ -1,13 +1,11 @@
 using System.Collections.Generic;
-using System.Linq;
 using Konamiman.Z80dotNet;
-using SuppaZ80.Models;
 
 namespace SuppaZ80.ViewModels;
 
-public class ProcessorStatus
+public class Status
 {
-    public ProcessorStatus(IEnumerable<byte> memory, IZ80Registers registers)
+    public Status(IEnumerable<byte> memory, IZ80Registers registers)
     {
         var regs = new[]
         {
@@ -17,14 +15,14 @@ public class ProcessorStatus
             new Register("HL", registers.HL),
             new Register("PC", registers.PC),
             new Register("SP", registers.SP),
-            new Register("I", registers.I)
+            new Register("I", registers.SP)
         };
 
-        Registers = new Registers(regs);
-
-        Memory = memory.Select((b, i) => new MemoryCell(b, i));
+        RawMemory = memory;
+        RawRegisters = registers;
     }
 
-    public IEnumerable<MemoryCell> Memory { get; }
-    public Registers Registers { get; }
+    public IZ80Registers RawRegisters { get; }
+
+    public IEnumerable<byte> RawMemory { get; }
 }
