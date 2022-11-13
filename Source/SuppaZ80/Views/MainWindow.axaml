@@ -72,17 +72,7 @@
 					</Viewbox>
 				</Button>
 			</StackPanel>
-
-			<!--<Panel Margin="20 0" IsVisible="{Binding !Debugger.IsDebugging^}" >
-                <Button IsVisible="{Binding !Processor.Run.IsExecuting^}" Command="{Binding Processor.Run}" HotKey="F5">Run without debug</Button>
-                <Button IsVisible="{Binding Processor.Run.IsExecuting^}" Command="{Binding Processor.Stop}">
-                    <Viewbox Width="15" Height="15">
-                        <Path Fill="Black" Data="{StaticResource Stop}"  />
-                    </Viewbox>
-                </Button>
-            </Panel>-->
-
-		</StackPanel>
+        </StackPanel>
 
 		<Grid>
             <Grid.ColumnDefinitions>

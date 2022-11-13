@@ -16,5 +16,6 @@ public interface IMainViewModel
     IObservable<string> Errors { get; }
     string Source { get; set; }
     ReactiveCommand<Unit, Result<IZafiroFile>> Open { get; }
-    IObservable<IEnumerable<MemoryBlockViewModel>> MemoryBlocks { get; }
+    IObservable<IEnumerable<MemoryBlockViewModel>> MemoryBlockLists { get; }
+    IObservable<List<NamedMemory>> RegisterLists { get; }
 }

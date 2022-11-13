@@ -9,12 +9,12 @@ namespace SuppaZ80.Models;
 
 public class Z80
 {
-    public static IObservable<ProcessorStatus> RunUntilHalted(byte[] program, IScheduler? scheduler)
+    public static IObservable<Status> RunUntilHalted(byte[] program, IScheduler? scheduler)
     {
         return RunUntilHalted<Unit>(program, scheduler);
     }
 
-    public static IObservable<ProcessorStatus> RunUntilHalted<T>(byte[] program, IScheduler? scheduler, IObservable<T>? until = null)
+    public static IObservable<Status> RunUntilHalted<T>(byte[] program, IScheduler? scheduler, IObservable<T>? until = null)
     {
         var z80 = new Z80Processor();
         z80.Memory.SetContents(0, program);
@@ -23,6 +23,6 @@ public class Z80
             .Generate(0, _ => !z80.IsHalted, x => x, _ => z80.ExecuteNextInstruction(), scheduler ?? Scheduler.Default)
             .TakeUntil(until ?? Observable.Never<T>())
             .TakeLast(1)
-            .Select(_ => ProcessorUtils.GetStatus(z80));
+            .Select(_ => z80.GetStatus());
     }
 }

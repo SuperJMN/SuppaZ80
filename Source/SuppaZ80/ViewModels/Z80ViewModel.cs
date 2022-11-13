@@ -30,7 +30,7 @@ public class Z80ViewModel : ViewModelBase, IZ80ViewModel
         Run.IsExecuting.Subscribe(isRunning);
     }
 
-    private IObservable<ProcessorStatus> RunFirstBinaryUntilHalted(IObservable<byte[]> assemblies)
+    private IObservable<Status> RunFirstBinaryUntilHalted(IObservable<byte[]> assemblies)
     {
         return assemblies
             .Take(1)
@@ -39,5 +39,5 @@ public class Z80ViewModel : ViewModelBase, IZ80ViewModel
 
     public ReactiveCommand<Unit, Unit> Stop { get; }
 
-    public ReactiveCommand<Unit, ProcessorStatus> Run { get; }
+    public ReactiveCommand<Unit, Status> Run { get; }
 }

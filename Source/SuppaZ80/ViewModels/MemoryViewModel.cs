@@ -18,7 +18,7 @@ public class MemoryViewModel : ReactiveValidationObject
         Text = cell.Value.ToString("X2");
         this.ValidationRule(x => x.Text, s =>
         {
-            var isValid = byte.TryParse(s, NumberStyles.HexNumber, CultureInfo.CurrentUICulture, out _);
+            var isValid = int.TryParse(s, NumberStyles.HexNumber, CultureInfo.CurrentUICulture, out _);
             return isValid;
         }, "Invalid value");
     }
