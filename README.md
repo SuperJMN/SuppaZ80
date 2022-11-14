@@ -2,8 +2,7 @@
 
 This is the smallest IDE you'll find for the Zilog Z80 CPU.
 
-https://user-images.githubusercontent.com/3109851/200137474-92177ce4-3aa0-4b96-80f1-aa3b4252cfb5.mp4
-
+https://user-images.githubusercontent.com/3109851/201792636-02186907-5726-4318-b2b2-4ae9885a20c3.mp4
 
 ## Instructions
 
