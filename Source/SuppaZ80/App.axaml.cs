@@ -19,7 +19,7 @@ namespace SuppaZ80
 
         public override void OnFrameworkInitializationCompleted()
         {
-            RegisterHighligthing();
+            RegisterHighlighting();
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
@@ -33,7 +33,7 @@ namespace SuppaZ80
             base.OnFrameworkInitializationCompleted();
         }
 
-        private static void RegisterHighligthing()
+        private static void RegisterHighlighting()
         {
             using var stream = typeof(App).Assembly.GetManifestResourceStream("SuppaZ80.Highlighting.Z80ASM.xml");
             using var reader = new XmlTextReader(stream!);
