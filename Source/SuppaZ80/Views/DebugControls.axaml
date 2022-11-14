@@ -22,7 +22,7 @@
                 <Path Fill="Black" Data="{StaticResource ForwardStep}" />
             </Viewbox>
         </Button>
-        <Button Command="{Binding Stop}" IsVisible="{Binding !Play.CanExecute^}">
+        <Button Command="{Binding Stop}">
             <Viewbox Width="15" Height="15">
                 <Path Fill="Black" Data="{StaticResource Stop}"  />
             </Viewbox>
