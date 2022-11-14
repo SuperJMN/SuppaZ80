@@ -13,19 +13,24 @@
 		<design:MainViewModelDesign />
 	</Design.DataContext>
 
-	<HeaderedContentControl Header="Memory">
+	<HeaderedContentControl Header="Memory" Margin="8 0 16 0">
 
 		<ScrollViewer HorizontalScrollBarVisibility="Auto">
-			<ItemsRepeater Items="{Binding MemoryBlockLists^}">
+			<ItemsRepeater Items="{Binding MemoryBlockLists^}" Grid.IsSharedSizeScope="True">
 				<ItemsRepeater.Layout>
 					<StackLayout />
 				</ItemsRepeater.Layout>
 
 				<ItemsRepeater.ItemTemplate>
 					<DataTemplate DataType="models:MemoryBlockViewModel">
-						<DockPanel>
-							<TextBlock VerticalAlignment="Center" Margin="4" TextAlignment="Right" Width="50" Text="{Binding BaseAddress}" />
-							<ItemsRepeater Items="{Binding Memory}">
+						<Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition SharedSizeGroup="Start" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock VerticalAlignment="Center" Margin="0 0 8 0" TextAlignment="Right" Text="{Binding BaseAddress}" />
+
+							<ItemsRepeater Grid.Column="1" Items="{Binding Memory}">
 								<ItemsRepeater.Layout>
 									<StackLayout Orientation="Horizontal" />
 								</ItemsRepeater.Layout>
@@ -36,7 +41,7 @@
 									</DataTemplate>
 								</ItemsRepeater.ItemTemplate>
 							</ItemsRepeater>
-						</DockPanel>
+						</Grid>
 					</DataTemplate>
 				</ItemsRepeater.ItemTemplate>
 
