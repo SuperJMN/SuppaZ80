@@ -13,7 +13,7 @@
                    Margin="0"
                    Background="White"
                    Foreground="Black"
-                   SyntaxHighlighting="C#"
+                   SyntaxHighlighting="Z80"
                    HorizontalScrollBarVisibility="Auto"
                    VerticalScrollBarVisibility="Auto"
                    FontFamily="{DynamicResource CodeFontFamily}" 

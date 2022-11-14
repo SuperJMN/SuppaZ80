@@ -11,6 +11,10 @@
     <AvaloniaResource Include="Assets\**" />
     <Folder Include="Behaviors\" />
     <None Remove=".gitignore" />
+    <None Remove="Z80ASM.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Highlighting\Z80ASM.xml" />
   </ItemGroup>
   <ItemGroup>
     <!--This helps with theme dll-s trimming.

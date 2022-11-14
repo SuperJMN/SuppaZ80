@@ -1,0 +1,71 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="Z80" extensions=".z80" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+	<Color name="OpCodes" fontWeight="bold" foreground="MidnightBlue" exampleText="bool b = true;" />
+	<Color name="Registers" foreground="Black" fontWeight="bold" exampleText="namespace A.B { using System; }"/>
+	<Color name="TrueFalse" fontWeight="bold" foreground="DarkCyan" exampleText="b = false; a = true;" />
+	<Color name="Digits" foreground="Salmon" />
+	<Color name="Comment" foreground="Green" fontStyle="italic" />
+	<Color name="Label" foreground="Gray" />
+
+	<RuleSet name="CommentMarkerSet">
+		<Keywords fontWeight="bold" foreground="Red">
+			<Word>TODO</Word>
+			<Word>FIXME</Word>
+		</Keywords>
+		<Keywords fontWeight="bold" foreground="#E0E000">
+			<Word>HACK</Word>
+			<Word>UNDONE</Word>
+		</Keywords>
+	</RuleSet>
+
+	<RuleSet name="Keywords" ignoreCase="true">
+
+		<Import ruleSet="CommentMarkerSet"/>
+
+		<Keywords color="OpCodes">
+			<Word>LD</Word>
+			<Word>HALT</Word>
+			<Word>CALL</Word>
+			<Word>ADD</Word>
+			<Word>RET</Word>
+			<Word>JR</Word>
+			<Word>RRA</Word>
+			<Word>SR</Word>
+			<Word>DJNZ</Word>
+			<Word>NC</Word>
+			<Word>NZ</Word>
+			<Word>Z</Word>
+			<Word>EX</Word>
+			<Word>SRL</Word>
+		</Keywords>
+	</RuleSet>
+
+	<RuleSet ignoreCase="true">
+
+		<Span color="Comment" ruleSet="CommentMarkerSet">
+			<Begin>;</Begin>
+		</Span>
+
+		<Keywords color="Registers">
+			<Word>AF</Word>
+			<Word>BC</Word>
+			<Word>HL</Word>
+			<Word>DE</Word>
+			<Word>A</Word>
+			<Word>B</Word>
+			<Word>C</Word>
+			<Word>D</Word>
+			<Word>E</Word>
+			<Word>F</Word>
+		</Keywords>
+
+		<Span begin="^[\t ]+" end="[ \t]+" ruleSet="Keywords" />
+
+		<Rule color="Digits">\b0[xX][0-9a-fA-F]+|(\b\d+(\.[0-9]+)?|\.[0-9]+)([eE][+-]?[0-9]+)?</Rule>
+
+		<Rule color="Label">\w+:</Rule>
+
+	</RuleSet>
+
+</SyntaxDefinition>
