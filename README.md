@@ -19,9 +19,7 @@ https://user-images.githubusercontent.com/3109851/201792636-02186907-5726-4318-b
 
 ## Pending work
 
-- Edit registers and memory.
 - Save file.
-- Syntax highlighting.
 
 ## Acknowledgements 
 
