@@ -72,31 +72,37 @@
 					</Viewbox>
 				</Button>
 			</StackPanel>
-        </StackPanel>
+		</StackPanel>
 
 		<Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" MinWidth="200" />
-            </Grid.ColumnDefinitions>
-            <HeaderedContentControl Grid.Column="0" BorderBrush="Black" BorderThickness="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" MinWidth="200" />
+			</Grid.ColumnDefinitions>
+			<HeaderedContentControl Grid.Column="0" BorderBrush="Black" BorderThickness="1">
 				<views:Editor IsReadOnly="{Binding Debugger.IsDebugging^}" CurrentLine="{Binding Debugger.CurrentLine^}" Code="{Binding Source, Mode=TwoWay}" MinWidth="400" />
 			</HeaderedContentControl>
 			<GridSplitter Margin="3 0" Grid.Column="1"
                           Background="{StaticResource SystemControlForegroundChromeMediumBrush}"
                           VerticalAlignment="Stretch" Width="5" />
-            <Border Grid.Column="2">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-			
-					<views:RegistersView />
-					<views:MemoryView Grid.Row="1" />
-                </Grid>
-            </Border>
-        </Grid>
+			<Border Grid.Column="2">
+				<HeaderedContentControl Header="Debug">
+					<Panel>
+						<Grid IsVisible="{Binding Debugger.IsDebugging^}">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition />
+							</Grid.RowDefinitions>
+
+							<views:RegistersView />
+							<views:MemoryView Grid.Row="1" />
+						</Grid>
+						<TextBlock VerticalAlignment="Center" Margin="10" TextAlignment="Center" IsVisible="{Binding !Debugger.IsDebugging^}" TextWrapping="Wrap"
+                                   Text="No debug session" />
+					</Panel>
+				</HeaderedContentControl>
+			</Border>
+		</Grid>
 	</DockPanel>
 </Window>
