@@ -60,7 +60,8 @@ public class MainViewModel : ViewModelBase, IMainViewModel
                 NamedMemory(x.BC, nameof(x.BC)),
                 NamedMemory(x.DE, nameof(x.DE)),
                 NamedMemory(x.HL, nameof(x.HL)),
-                NamedMemory(x.PC, nameof(x.PC))
+                NamedMemory(x.PC, nameof(x.PC)),
+                NamedMemory(x.SP, nameof(x.SP))
             }.ToList();
         });
     }

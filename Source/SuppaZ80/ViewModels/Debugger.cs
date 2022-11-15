@@ -1,62 +1,37 @@
 using System;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using CSharpFunctionalExtensions;
 using Konamiman.Z80dotNet;
 using ReactiveUI;
 using Sixty502DotNet;
+using SuppaZ80.Models;
 
 namespace SuppaZ80.ViewModels;
 
 public class Debugger : ViewModelBase, IDebugger
 {
     private readonly Z80Processor z80 = new();
+    private readonly ObservableAsPropertyHelper<Result<AssemblyData>> prop;
 
     public Debugger(IObservable<Result<AssemblyData>> assembleResultChanged)
     {
-        assembleResultChanged
-            .WhereSuccess()
-            .Do(assemblyData =>
-            {
-                z80.Reset();
-                z80.Memory.SetContents(0, assemblyData.ProgramBinary);
-            })
-            .Subscribe();
+        prop = assembleResultChanged.ToProperty(this, x => x.AssembleResult);
+        Play = ReactiveCommand.CreateFromObservable(() => this.WhenAnyValue(x => x.AssembleResult).WhereSuccess().SelectMany(result => StartDebugSession(z80, result)));
+        Step = ReactiveCommand.Create(() => Status.Empty);
+        Stop = ReactiveCommand.Create(() => { });
+        IsDebugging = Play.To(true).Merge(Stop.To(false)).DistinctUntilChanged();
+        StatusChanged = Observable.Return(Status.Empty);
+    }
 
-        var canStartDebuggingSession = new BehaviorSubject<bool>(true);
-        var isHaltedSubject = new BehaviorSubject<bool>(false);
+    public Result<AssemblyData> AssembleResult => prop.Value;
 
-        IsDebugging = canStartDebuggingSession.Select(b => !b);
+    private IObservable<Status> StartDebugSession(Z80Processor z80Processor, AssemblyData assemblyData)
+    {
+        z80Processor.Memory.SetContents(0, assemblyData.ProgramBinary);
+        z80Processor.Registers = new Z80Registers();
 
-        Step = ReactiveCommand.CreateFromObservable(() => Observable.Return(z80.ExecuteNextInstruction()).Select(_ => z80.GetStatus()), isHaltedSubject.Select(x => !x));
-
-        Stop = ReactiveCommand.Create(() => { }, canStartDebuggingSession.Select(b => !b));
-        Play = ReactiveCommand.CreateFromObservable(() => Observable.Start(() => z80.Reset()).Select(_ => z80.GetStatus()), canStartDebuggingSession);
-        StatusChanged = Step.Merge(Play);
-        Play.Select(_ => false).Subscribe(canStartDebuggingSession);
-        Stop.Select(_ => true).Subscribe(canStartDebuggingSession);
-
-        Step.Select(_ => z80.IsHalted).Merge(Stop.Select(_ => false)).Subscribe(isHaltedSubject);
-
-        var currentLine = Play.Merge(Step).WithLatestFrom(assembleResultChanged.WhereSuccess(), (status, data) =>
-        {
-            if (z80.IsHalted)
-            {
-                return Maybe<int>.None;
-            }
-
-            var line = Maybe
-                .From(status.RawRegisters.PC)
-                .Bind(pc => data.DebugInfo.TryFirst(x => x.ProgramCounter == pc))
-                .Select(x => x.Line);
-
-            return line;
-        });
-
-        var previous = currentLine.SkipLast(1).StartWith(Maybe<int>.None);
-
-        CurrentLine = currentLine.WithLatestFrom(previous, (c, p) => c.HasNoValue ? p : c).Merge(Stop.Select(_ => Maybe<int>.None));
+        return Observable.Return(z80Processor.GetStatus());
     }
 
     public IObservable<bool> IsDebugging { get; }
