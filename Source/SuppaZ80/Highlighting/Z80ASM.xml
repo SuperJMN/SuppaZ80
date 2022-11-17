@@ -24,20 +24,76 @@
 		<Import ruleSet="CommentMarkerSet"/>
 
 		<Keywords color="OpCodes">
+			<Word>NOP</Word>
 			<Word>LD</Word>
-			<Word>HALT</Word>
-			<Word>CALL</Word>
+			<Word>INC</Word>
+			<Word>DEC</Word>
+			<Word>RLCA</Word>
+			<Word>EX</Word>
 			<Word>ADD</Word>
-			<Word>RET</Word>
+			<Word>RRCA</Word>
+			<Word>DJNZ</Word>
+			<Word>RLA</Word>
 			<Word>JR</Word>
 			<Word>RRA</Word>
-			<Word>SR</Word>
-			<Word>DJNZ</Word>
-			<Word>NC</Word>
-			<Word>NZ</Word>
-			<Word>Z</Word>
-			<Word>EX</Word>
+			<Word>DAA</Word>
+			<Word>CPL</Word>
+			<Word>SCF</Word>
+			<Word>CCF</Word>
+			<Word>HALT</Word>
+			<Word>ADC</Word>
+			<Word>SUB</Word>
+			<Word>SBC</Word>
+			<Word>AND</Word>
+			<Word>XOR</Word>
+			<Word>OR</Word>
+			<Word>CP</Word>
+			<Word>RET</Word>
+			<Word>POP</Word>
+			<Word>JP</Word>
+			<Word>CALL</Word>
+			<Word>PUSH</Word>
+			<Word>RST</Word>
+			<Word>RLC</Word>
+			<Word>RRC</Word>
+			<Word>RL</Word>
+			<Word>RR</Word>
+			<Word>SLA</Word>
+			<Word>SRA</Word>
+			<Word>SLL</Word>
 			<Word>SRL</Word>
+			<Word>BIT</Word>
+			<Word>RES</Word>
+			<Word>SET</Word>
+			<Word>OUT</Word>
+			<Word>EXX</Word>
+			<Word>IN</Word>
+			<Word>NEG</Word>
+			<Word>RETN</Word>
+			<Word>IM</Word>
+			<Word>NEG*</Word>
+			<Word>RETI</Word>
+			<Word>RETN*</Word>
+			<Word>RRD</Word>
+			<Word>RLD</Word>
+			<Word>LDI</Word>
+			<Word>CPI</Word>
+			<Word>INI</Word>
+			<Word>OUTI</Word>
+			<Word>LDD</Word>
+			<Word>CPD</Word>
+			<Word>IND</Word>
+			<Word>OUTD</Word>
+			<Word>LDIR</Word>
+			<Word>CPIR</Word>
+			<Word>INIR</Word>
+			<Word>OTIR</Word>
+			<Word>LDDR</Word>
+			<Word>CPDR</Word>
+			<Word>INDR</Word>
+			<Word>OTDR</Word>
+			<Word>DI</Word>
+			<Word>EI</Word>
 		</Keywords>
 	</RuleSet>
 
@@ -58,6 +114,13 @@
 			<Word>D</Word>
 			<Word>E</Word>
 			<Word>F</Word>
+			<Word>H</Word>
+			<Word>L</Word>
+			<Word>IX</Word>
+			<Word>IY</Word>
+			<Word>SP</Word>
+			<Word>S</Word>
+			<Word>SZ</Word>
 		</Keywords>
 
 		<Span begin="^[\t ]+" end="[ \t]+" ruleSet="Keywords" />
