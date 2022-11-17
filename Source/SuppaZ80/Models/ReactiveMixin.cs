@@ -10,4 +10,9 @@ public static class ReactiveMixin
     {
         return observable.Select(_ => Unit.Default);
     }
+
+    public static IObservable<TRet> To<T, TRet>(this IObservable<T> observable, TRet value)
+    {
+        return observable.Select(_ => value);
+    }
 }
